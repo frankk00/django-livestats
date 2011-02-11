@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block head_title %}{{ monitor.title }} - {% endblock %}
+{% block title %}{{ monitor.title }}{% endblock %}
+{% block head %}
+	<script type="text/javascript" src="/media/js/jquery.tableSort.js"></script>
+{% endblock %}
+		{% block body %}
+		{% if monitor.show_table %}
+		<section class="overview">
+			<table class="sortTable" id="project_1">
+				<thead>
+					<tr>
+						<th class="first" colspan="2">{{ monitor.title }}</th>
+						{% for column in tablecolumns %}
+						<th class="{% if forloop.last %}last{% endif %} tablecolumn">{{ column.title }}</th>
+						{% endfor %}
+					</tr>
+				</thead>
+				<tbody class="project_1"></tbody>
+			</table>
+		</section>
+		{% endif %}
+		{% if monitor.show_kpis %}
+		<section class="details">
+			{% for box in boxes %}
+			<section class="box kpi {% if not monitor.show_table %}large{% endif %}" id="kpi_{{ box.id }}">
+				<header>
+					<h1 class="title">{{ box.title }}</h1>
+				</header>
+				<div style="text-align: center;">
+					<p class="key"></p>
+					<p class="subtitle"></p>
+				</div>
+			</section>
+			{% endfor %}
+			{% if monitor.show_table %}
+			{% if kpi_history %}
+			<section class="box" id="kpi_history">
+				<header>
+					<h1 class="title">{{ monitor.order_by }} history</h1>
+				</header>
+				<div style="text-align: center; overflow: auto;">
+					{% for kpi in kpi_history %}<div class='date'><p class='title'><a href='{% url livestats_monitor_detail_day monitor.id, kpi.date_from.year, kpi.date_from.month, kpi.date_from.day %}'>{{ kpi.date_from|date:"D" }}</a></p><p class='sub'>{{ kpi.kpi.prefix }}{{ kpi.value }}{{ kpi.kpi.suffix }}</p></div>{% endfor %}
+					{% if not live_update %}
+					<br /><a href="{% url livestats_monitor_detail monitor.id %}">Tilbage til i dag</a>
+					{% endif %}
+				</div>
+			</section>
+			{% endif %}
+			{% endif %}
+		</section>
+		{% endif %}
+		
+		<script type="text/javascript" charset="utf-8">
+		function refresh(firstTime)
+		{
+			$.getJSON('ajax/', function(data) {
+				for (i=0;i<=(data.projects.length-1);i++)
+				{
+					project = data.projects[i]
+					{% if monitor.show_table %}
+				  	for (ii=0;ii<=(project.data.length-1);ii++)
+					{
+						entity = project.data[ii]
+						td = '<td class="first">'+ entity.order +'</td>';
+						td += '<td><div id="project_' + project.id + 'entity_' + entity.entity_id + '">'+ entity.entity_name + '</div></td>';
+						for (kpii=0; kpii<=(entity.kpi.length-1);kpii++)
+						{
+							kpi = entity.kpi[kpii];
+							if (kpii == entity.kpi.length-1)
+							{
+								td += '<td class="last"><span class="sort '+ kpi.key_css_class +'">'+ kpi.data + '</span></td>';
+							} else {
+								td += '<td><span class="'+ kpi.key_css_class +'">'+ kpi.data + '</span></td>';
+							}
+							
+						}
+						
+						ex = $("#project_" + project.id + "entity_" + entity.entity_id);
+						if (ex.length > 0)
+						{
+							ex.parentsUntil('tr').parent().html(td);
+						} else {
+							$("tbody.project_" + project.id).append("<tr>"+ td + "</tr>");
+						}
+					}
+					{% endif %}
+					for (ii=0;ii<=(project.kpi.length-1);ii++)
+					{
+						kpi = project.kpi[ii]
+						if (kpi.display == true)
+						{
+							$("#kpi_" + kpi.id).fadeIn();
+							$("#kpi_" + kpi.id + " .key").removeClass("red green yellow orange grey").addClass(kpi.key_css_class).html(kpi.key);
+							$("#kpi_" + kpi.id + " .subtitle").html(kpi.subtitle);
+						} else {
+							$("#kpi_" + kpi.id).hide();
+						}
+					}
+					if (project.competition > 0)
+					{
+						$(".kpi:first .key").removeClass("red green yellow orange grey").addClass(project.competition_css_class);
+					}
+					{% if monitor.show_table %}
+					if (project.data.length == 0)
+					{
+						$("#project_" + project.id).hide();
+					} else {
+						
+						if (firstTime == false)
+						{
+							$('#project_' + project.id).sortTable({
+							     onCol: 1,
+							     sortDesc: false,
+							     keepRelationships: true,
+								 sortType: 'numeric',
+							});
+						}
+						
+						$("#project_" + project.id).fadeIn(800);
+					}{% endif %}
+					
+				}
+				{% if live_update %}
+				setTimeout ("refresh(false)", 1000);
+				{% endif %}
+			});
+
+		}
+		$(document).ready(function() {
+			refresh(firstTime=true);
+		});
+		</script>
+		
+{% endblock %}

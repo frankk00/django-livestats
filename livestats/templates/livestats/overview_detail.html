@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="overview monitorlist">
+	<ul id="livestats">
+	</ul>
+</div>
+
+<script type="text/javascript" charset="utf-8">
+function refresh(firstTime)
+{
+	console.log("getJson")
+	$.getJSON('ajax/', function(data) {
+		for (i=0;i<=(data.kpi.length-1);i++)
+		{
+			kpi = data.kpi[i]
+			
+			content = '<div class="kpi" id="kpi_' + kpi.id + '">';
+			content += '	<header>';
+			content += '		<h2 class="title">'+ kpi.title +'</h2>';
+			content += '	</header>';
+			content += '	<div style="text-align: center;">';
+			content += '		<p>' + kpi.subtitle +'</p>';
+			content += '		<h2 class="key ' + kpi.key_css_class + '">' + kpi.key +'</h2>';
+			content += '	</div>';
+			content += '</div>';
+			
+			ex = $("#kpi_" + kpi.id);
+			if (ex.length > 0)
+			{
+				ex.html(content)
+			} else {
+				$("#livestats").append("<li>" + content + "</li>");
+			}
+			
+		}
+	});
+
+}
+$(document).ready(function() {
+	refresh(firstTime=true);
+	{% if live_update %}
+	var refreshId = setInterval(function() {
+      refresh(firstTime=false);
+	}, 3000);
+	{% endif %}
+
+});
+</script>
+{% endblock %}

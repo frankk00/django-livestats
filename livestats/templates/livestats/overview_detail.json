@@ -1,0 +1,13 @@
+{
+	"kpi":[
+	{% for stats in kpis %}
+	{% for kpi in stats.kpi %}
+	{
+		"id": "{{ stats.monitor.id }}",
+		"title": "{{ stats.monitor }}",
+		"key": "{{ kpi.prefix }}{{ kpi.data }}{{ kpi.suffix }}",
+		"key_css_class": "{{ kpi.color }}",
+		"subtitle" : "{{ kpi.title }}"
+	}{% endfor %}{% if not forloop.last %},{% endif %}{% endfor %}
+	]
+}

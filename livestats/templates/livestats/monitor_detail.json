@@ -1,0 +1,53 @@
+{% load livestats %}
+{% if html %}
+<html>
+<head>
+
+</head>
+<body>
+{% endif %}
+{% filter remove_whitespace %}
+{
+	"projects" :
+	[
+	{
+		"name" : "{{ summary.monitor }}",
+		"competition" : "{{ summary.competition }}",
+		"competition_css_class" : "{{ summary.competition_css_class }}",
+		"id" : 1,
+		"data" : [{% with i as 0 %}{% for stats in entities %}
+		{
+			"entity_id": "{{ stats.entity.id }}",
+			"entity_name": "{{ stats.entity }}",
+			"kpi" : [
+				{% for kpi in stats.kpi %}{
+					
+					"id": {{ kpi.id }},
+					"data": "{{ kpi.prefix }}{{ kpi.data }}{{ kpi.suffix }}",
+					"key_css_class": "{{ kpi.color }}"
+					
+				}{% if not forloop.last %},{% endif %}{% endfor %}
+			],
+			"order": "{{ forloop.counter }}"
+		}{% if not forloop.last %},{% endif %}
+		{% endfor %}
+		{% endwith %}],
+		"kpi": [
+		{% for kpi in summary.kpi %}
+		{
+			"id": "{{ kpi.id }}",
+			"key": "{{ kpi.prefix }}{{ kpi.data }}{{ kpi.suffix }}",
+			"key_css_class": "{{ kpi.color }}",
+			"subtitle" : "{{ kpi.subtitle_data }}",
+			{% if kpi.data %}"display": true{% else %}"display": false{% endif %}
+		}{% if not forloop.last %},{% endif %}{% endfor %}
+		]
+	}
+	]
+
+}
+{% endfilter %}
+{% if html %}
+</body>
+</html>
+{% endif %}

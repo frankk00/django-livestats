@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title>New registration</title>
+		<link rel="stylesheet" href="/media/css/registration.css" type="text/css" media="screen"charset="utf-8">
+		<script src="/media/js/jquery.min.js" type="text/javascript"></script>
+		<script src="/media/js/jquery.defaultvalue-1.0.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body id="registration">
+	
+	<form method="POST">
+		{% csrf_token %}
+		<table>
+			{% for field in form %}
+			{{ field }}
+			{% endfor %}
+		</table>
+		
+		{% for field in form %}
+		{% for error in field.errors %}
+		<div class="error">{{ field.label }}: {{ error }}</div>
+		{% endfor %}
+		{% endfor %}
+		<div class="clear"></div>
+	</form>
+	<br />
+	<div id="msg">
+		{% if object %}
+		<b>{{ object.type }} with {{ object.value }} saved!</b>
+		{% endif %}
+	</div><br />
+	<div id="popup">
+		<a href="./">&gt; &gt; &gt; Update &lt; &lt; &lt;</a><br />
+		(don't use F5)
+	</div>
+	<section id="stats">
+		<header>
+			<h3>{{ entity }}</h3>
+		</header>
+		{% for monitor in entity.monitor_set.all %}
+		<a href="{{ monitor.url }}">{{ monitor }}</a><br />
+		{% endfor %}
+	</section>
+	<script type="text/javascript"> 
+				$(document).ready(function(){
+					$('input').defaultValue("Value");
+				});
+			</script>
+	</body>
+</html>
