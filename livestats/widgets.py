@@ -13,6 +13,9 @@ from django import forms
 from django.utils.safestring import mark_safe
 from django.utils.encoding import force_unicode
 import textwrap
+from django.conf import settings
+
+LIVESTATS_REGBUTTON_WIDTH = getattr(settings, "LIVESTATS_REGBUTTON_WIDTH", 1000)
 
 # Mainly taken from on http://www.djangosnippets.org/snippets/951/ and changed to fit this application
 
@@ -31,7 +34,7 @@ class SubmitButton(forms.Widget):
             type="submit",
             id=self.label.replace(" ", "_"),
             name=self.name,
-            value="\n".join(textwrap.TextWrapper(width=11, drop_whitespace=False).wrap(self.label)), # Create \r\n if width is to wide
+            value="\n".join(textwrap.TextWrapper(width=LIVESTATS_REGBUTTON_WIDTH, drop_whitespace=False).wrap(self.label)), # Create \r\n if width is to wide
             )
         return mark_safe(u'<input%s />' % (
             forms.widgets.flatatt(final_attrs),
