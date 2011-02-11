@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block head %}
+<script src="/media/js/jquery.defaultvalue-1.0.js" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
 {% block body %}
 <div class="overview monitorlist">
 	<section class="overview">
@@ -24,5 +27,40 @@
 	{% endfor %}
 	</table>
 	</section>
+	<section class="details">
+		{% if not user.is_authenticated %}
+		<section class="box login">
+			<h1>Login</h1>
+			<form action="{% url django.contrib.auth.views.login %}" method="POST">
+				{% csrf_token %}
+				<div>
+					<input type="hidden" name="next" value="{{ next }}" id="next">
+					<input type="text" name="username" value="Username" id="username"><br/>
+					<input type="password" name="password" value="" id="password"><br />
+					<input type="submit" name="submit" value="Login" id="submit">
+				</div>
+			</form>
+		</section>
+		{% else %}
+		<section class="box">
+			<h1>Hi {% if user.first_name %}{{ user.first_name}}{% else %}{{ user }}{% endif %}!</h1>
+			<div>
+				<ul>
+					<li><a href="{% url livestats_registration_form %}" onclick="window.open('{% url livestats_registration_form %}', 'mywindow','toolbar=0, status=0, location=0, menubar=0, directories=0, resizeable=0, scrollbars=1, height=600px, width=200px');return false;" id="registration">New registration</a></li>
+					{% if user.is_staff %}
+					<li><a href="{% url admin:index %}" id="admin">Administration</a></li>
+					{% endif %}
+					<li><a href="{% url django.contrib.auth.views.logout %}" id="logout">Logout</a></li>
+				</ul>
+			</div>
+		</section>
+		{% endif %}
+	</section>
 </div>
+<script type="text/javascript"> 
+	$(document).ready(function(){
+		$('input#username').defaultValue("Username");
+		$('input#password').defaultValue("Password");
+	});
+</script>
 {% endblock %}

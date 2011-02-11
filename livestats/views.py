@@ -18,6 +18,7 @@ from operator import attrgetter
 from forms import RegistrationForm
 from django.views.decorators.cache import cache_page
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 
 @login_required
 def registration_form(request):
@@ -168,14 +169,17 @@ def overview_detail(request, overview_id, ajax=False, day=None, month=None, year
             {'overview': o, 'kpis': kpis, 'live_update': True},
             context_instance=RequestContext(request))
             
-            
-@cache_page(1)    
 def monitor_list(request):
     day=datetime.date.today().day
     month=datetime.date.today().month
     year=datetime.date.today().year
     live_update = True
     reg = Registration.objects.filter(date__day=day, date__month=month, date__year=year)
+    
+    if request.GET.has_key("next"):
+        next = request.GET["next"]
+    else:
+        next = reverse("livestats_monitor_list")
 
     kpis = []
 
@@ -187,5 +191,5 @@ def monitor_list(request):
         kpis.append(stats)
 
     return render_to_response("livestats/monitor_list.html",
-        {'object_list': kpis,},
+        {'object_list': kpis, 'next': next},
         context_instance=RequestContext(request))
