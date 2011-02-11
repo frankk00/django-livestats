@@ -23,7 +23,8 @@ urlpatterns = patterns('',
     ### Monitor displays
     
     # List
-    (r'^$', 'django.views.generic.list_detail.object_list', {'queryset': Monitor.objects.all(),}, 'livestats_monitor_list'),
+    #(r'^$', 'django.views.generic.list_detail.object_list', {'queryset': Monitor.objects.all(),}, 'livestats_monitor_list'),
+    (r'^$', 'livestats.views.monitor_list', {}, 'livestats_monitor_list'),
     
     # Today
     (r'^(?P<monitor_id>\d+)/$', 'livestats.views.monitor_detail', {}, 'livestats_monitor_detail'),

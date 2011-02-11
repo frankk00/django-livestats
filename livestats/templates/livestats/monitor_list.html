@@ -1,10 +1,28 @@
 {% extends "base.html" %}
 {% block body %}
 <div class="overview monitorlist">
-	<ul>
+	<section class="overview">
+	<table>
+		<thead>
+			<tr>
+				<th class="first">Monitor</th>
+				<th id="kpi">KPI</td>
+				<th class="last">Result</th>
+			</tr>
+		</thead>
+		<tfoot>
+		    <tr>
+				<th></th>
+		    </tr>
+	  </tfoot>
 	{% for monitor in object_list %}
-	<li><a href="{{ monitor.url }}">{{ monitor }}</li>
+		<tr>
+			<td class="first"><a href="{{ monitor.monitor.url }}">{{ monitor.monitor }}</a></td>
+			<td id="kpi">{{ monitor.kpi.0.title }}</td>
+			<td class="last"><span class="{{ monitor.kpi.0.color}}">{{ monitor.kpi.0.prefix }} {{ monitor.kpi.0.data }} {{ monitor.kpi.0.suffix }}</span></td>
+		</tr>
 	{% endfor %}
-	</ul>
+	</table>
+	</section>
 </div>
 {% endblock %}

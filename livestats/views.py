@@ -167,3 +167,25 @@ def overview_detail(request, overview_id, ajax=False, day=None, month=None, year
         return render_to_response("livestats/overview_detail.html",
             {'overview': o, 'kpis': kpis, 'live_update': True},
             context_instance=RequestContext(request))
+            
+            
+@cache_page(1)    
+def monitor_list(request):
+    day=datetime.date.today().day
+    month=datetime.date.today().month
+    year=datetime.date.today().year
+    live_update = True
+    reg = Registration.objects.filter(date__day=day, date__month=month, date__year=year)
+
+    kpis = []
+
+    for monitor in Monitor.objects.all():
+        regtypes = RegistrationType.objects.filter(kpi__monitorkpi__monitor=monitor)
+        regs = reg.filter(entity__in=monitor.entities.all())
+        stats = Stats([monitor.order_by,], regs, monitor.order_by)
+        stats.monitor = monitor
+        kpis.append(stats)
+
+    return render_to_response("livestats/monitor_list.html",
+        {'object_list': kpis,},
+        context_instance=RequestContext(request))

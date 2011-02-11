@@ -62,7 +62,7 @@ class Stats(object):
                 'prefix': kpi.prefix,
                 'suffix': kpi.suffix,
                 'color': self.getColor(kpi, data[0]),
-                'title': kpi.tablecolumn_name,
+                'title': kpi.title,
             })
             if order_by == kpi:
                 self.order_by = data

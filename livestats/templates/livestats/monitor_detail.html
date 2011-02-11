@@ -16,6 +16,11 @@
 						{% endfor %}
 					</tr>
 				</thead>
+				<tfoot>
+				    <tr>
+						<th colspan="{{ tablecolumns.count|add:2 }}"></th>
+				    </tr>
+			  </tfoot>
 				<tbody class="project_1"></tbody>
 			</table>
 		</section>
@@ -63,7 +68,7 @@
 					{
 						entity = project.data[ii]
 						td = '<td class="first">'+ entity.order +'</td>';
-						td += '<td><div id="project_' + project.id + 'entity_' + entity.entity_id + '">'+ entity.entity_name + '</div></td>';
+						td += '<td class="name"><div id="project_' + project.id + 'entity_' + entity.entity_id + '">'+ entity.entity_name + '</div></td>';
 						for (kpii=0; kpii<=(entity.kpi.length-1);kpii++)
 						{
 							kpi = entity.kpi[kpii];
