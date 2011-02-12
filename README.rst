@@ -8,6 +8,7 @@ SCREENSHOT
 ===========
 
 .. image:: http://kristian.oellegaard.com/wp-content/uploads/2011/02/Sk%C3%A6rmbillede-2011-02-12-kl.-01.11.26.png
+.. image:: http://kristian.oellegaard.com/wp-content/uploads/2011/02/Sk%C3%A6rmbillede-2011-02-12-kl.-01.32.03.png
 
 REQUIRES (included in media/)
 =======================
