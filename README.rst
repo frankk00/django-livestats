@@ -1,5 +1,16 @@
-REQUIRES (only if using default templates)
-========
+INSTALL
+=======
+
+- Add to INSTALLED_APPS
+- Add to urls.py (e.g. (r'^', include('livestats.urls')), )
+
+SCREENSHOT
+===========
+
+.. image:: http://kristian.oellegaard.com/wp-content/uploads/2011/02/Sk%C3%A6rmbillede-2011-02-12-kl.-01.11.26.png
+
+REQUIRES (included in media/)
+=======================
 
 - jQuery
 http://jquery.com/
@@ -11,12 +22,3 @@ http://mitya.co.uk/scripts/Animated-table-sort-REGEXP-friendly-111
 http://code.google.com/p/jquery-defaultvalue/
 
 The templates tries to find them in /media/js/
-
-INSTALL
-=======
-
-- Add to INSTALLED_APPS
-- Add to urls.py (e.g. (r'^', include('livestats.urls')), )
-- Create a base.html in root template directory
-- Add jquery to base.html
-- Create appropriate styles for the table and KPI boxes
