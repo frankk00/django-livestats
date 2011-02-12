@@ -1,0 +1,309 @@
+/* @override http://localhost:8000/media/css/style.css */
+
+body
+{
+	background-color: #fff;
+	background-image: url("/media/images/bg.png");
+	background-repeat: repeat-x;
+	width: 1100px;
+	margin: auto;
+}
+body#registration
+{
+	width: 250px;
+	margin: 0px;
+	padding: 0px;
+	background-image: url("/media/images/box.png");
+	background-color: #282828;
+	text-align: center;
+}
+body, th, th
+{
+	font: 14px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+	color: #fff;
+}
+
+h1
+{
+	color: #000;
+}
+
+a
+{
+	color: #000;
+}
+
+/* @group Table */
+
+section.overview
+{
+	width: 800px;
+	float: left;
+	min-height: 600px;
+	background-image: url("/media/images/bg_img.png");
+	background-repeat: no-repeat;
+	background-position: center;
+}
+.overview table
+{
+	width: 100%;
+	margin-top: 20px;
+	border:  0px;
+	border-collapse: collapse;
+	-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+th
+{
+	background-image: url("/media/images/th.png");
+	height: 20px;
+	text-align: left;
+	font-weight: bold;
+}
+td
+{
+	background-color: #ccc;
+	background-image: url("/media/images/td.png");
+	background-position: bottom;
+	background-repeat: repeat-x;
+	height: 20px;
+	color: #000;
+
+}
+td a
+{
+	background-image: url("/media/images/livestats.png");
+	background-repeat: no-repeat;
+	padding-left: 25px;
+}
+td, th
+{
+	padding: 5px;
+}
+td.first, th.first
+{
+	text-align: left;
+	padding-left: 15px;
+}
+td.first
+{
+
+}
+td.last, th.last
+{
+	text-align: right;
+	padding-right: 15px;
+	width: 125px;
+}
+td.name
+{
+	font-weight: bold;
+}
+
+
+tfoot th
+{
+	position: absolute;
+	margin-top: -1px;
+	width: 800px;
+	padding: 0px;
+	height: 1px;
+	background-position: bottom;
+	background-image: url("/media/images/th-foot.png");
+}
+#kpi
+{
+	width: 125px;
+}
+
+/* @end */
+
+/* @group Tablecolors */
+
+.red
+{
+	color: #ff0000;
+}
+.yellow
+{
+	color: #ffff00;
+}
+.green
+{
+	color: #339933;
+}
+.orange
+{
+    color: #ff7b00;
+}
+.grey
+{
+	color: #fff;
+}
+
+/* @end */
+
+/* @group KPI Boxes */
+section.details
+{
+	float: right;
+	width: 250px;
+}
+.box h1, #registration h1
+{
+	background-image: url("/media/images/th.png");
+	margin: 0px;
+	font-size: 14px;
+	text-align: left;
+	padding-left: 10px;
+	height: 30px;
+	line-height: 28px;
+	color: #fff;
+}
+.box h1
+{
+	-moz-border-radius: 5px 5px 0px 0px;
+	-webkit-border-radius: 5px 5px 0px 0px;
+}
+
+.box
+{
+	color: #000;
+	margin-top: 20px;
+	background-color: #000;
+	background-position: top;
+	background-image: url("/media/images/box.png");
+	padding-bottom: 10px;
+	
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+.box.kpi .key
+{
+	font-size: 38px;
+	font-weight: bold;
+	font-family: "Courier New", Courier, mono;
+}
+
+
+/* @end */
+
+/* @group Misc boxes */
+
+.box.login div
+{
+	padding: 20px;
+	text-align: center;
+	padding-bottom: 10px;
+}
+
+.login input
+{
+	width: 150px;
+	background-color: #555;
+	border: 0px;
+	height: 15px;
+	margin-bottom: 5px;
+	color: #fff;
+	padding: 4px;
+}
+
+.login input#submit
+{
+	margin-top: 10px;
+	width: 60px;
+	height: 25px;
+}
+
+.box ul
+{
+	list-style-type: none;
+	padding: 0px;
+	margin: 0px;
+}
+.box li
+{
+	padding: 5px 0px;
+	margin: 0px;
+}
+.box li a
+{
+	width: 190px;
+}
+
+.login input#submit, .box li a, #registration input.multiplesubmit, #registration #close
+{
+	background: #222 url(/media/images/alert-overlay.png) repeat-x;
+	display: inline-block;
+	padding: 5px 10px 6px;
+	color: #fff;
+	text-decoration: none;
+	font-weight: bold;
+
+	line-height: 1;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+	text-shadow: 0 -1px 1px rgba(0,0,0,0.25);
+	border-bottom: 1px solid rgba(0,0,0,0.25);
+	position: relative;
+	cursor: pointer;
+}
+
+#registration input
+{
+	margin: 18px;
+	margin-bottom: 0px;
+}
+#registration input.multiplesubmit
+{
+	width: 160px;
+}
+#registration input#id_value
+{
+	width: 160px;
+	font-size: 24px;
+}
+#registration input#id_value.empty
+{
+	color: #ccc;
+	text-align: center;
+}
+
+.box li a#registration
+{
+	background-color: #008202;
+}
+
+.box li a#admin
+{
+	background-color: #001782;
+}
+.box li a#logout, #registration #close
+{
+	background-color: #8a0000;
+	border: 0px;
+}
+
+.box div
+{
+	padding: 20px;
+	color: #fff;
+	
+}
+
+/* @end */
+
+
+
+.poweredby
+{
+    clear: both;
+    text-align: center;
+    color: #aaa;
+    font-size: 11px;
+}
