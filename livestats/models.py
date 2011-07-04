@@ -62,6 +62,11 @@ class Entity(models.Model):
         ordering = ('name',)
                 
     def __unicode__(self):
+        if self.user:
+            if self.user.first_name:
+                return self.user.get_full_name()
+            elif not self.name:
+                return self.user.username
         return self.name
 
 class RegistrationType(models.Model):
