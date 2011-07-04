@@ -59,7 +59,13 @@
 		<script type="text/javascript" charset="utf-8">
 		function refresh(firstTime)
 		{
-			$.getJSON('ajax/', function(data) {
+            if (firstTime == true)
+			{
+				url = 'ajax/';
+			} else {
+				url = 'ajax/?refresh';
+			}
+			$.getJSON(url, function(data) {
 				for (i=0;i<=(data.projects.length-1);i++)
 				{
 					project = data.projects[i]
