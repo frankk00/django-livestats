@@ -1,9 +1,9 @@
-/* @override http://localhost:8000/media/css/style.css */
+/* @override http://localhost:8000/static/livestats/css/style.css */
 
 body
 {
 	background-color: #fff;
-	background-image: url("/media/images/bg.png");
+	background-image: url("/static/livestats/images/bg.png");
 	background-repeat: repeat-x;
 	width: 1100px;
 	margin: auto;
@@ -13,7 +13,7 @@ body#registration
 	width: 250px;
 	margin: 0px;
 	padding: 0px;
-	background-image: url("/media/images/box.png");
+	background-image: url("/static/livestats/images/box.png");
 	background-color: #282828;
 	text-align: center;
 }
@@ -40,7 +40,7 @@ section.overview
 	width: 800px;
 	float: left;
 	min-height: 600px;
-	background-image: url("/media/images/bg_img.png");
+	background-image: url("/static/livestats/images/bg_img.png");
 	background-repeat: no-repeat;
 	background-position: center;
 }
@@ -55,7 +55,7 @@ section.overview
 }
 th
 {
-	background-image: url("/media/images/th.png");
+	background-image: url("/static/livestats/images/th.png");
 	height: 20px;
 	text-align: left;
 	font-weight: bold;
@@ -63,7 +63,7 @@ th
 td
 {
 	background-color: #ccc;
-	background-image: url("/media/images/td.png");
+	background-image: url("/static/livestats/images/td.png");
 	background-position: bottom;
 	background-repeat: repeat-x;
 	height: 20px;
@@ -72,7 +72,7 @@ td
 }
 td a
 {
-	background-image: url("/media/images/livestats.png");
+	background-image: url("/static/livestats/images/livestats.png");
 	background-repeat: no-repeat;
 	padding-left: 25px;
 }
@@ -109,7 +109,7 @@ tfoot th
 	padding: 0px;
 	height: 1px;
 	background-position: bottom;
-	background-image: url("/media/images/th-foot.png");
+	background-image: url("/static/livestats/images/th-foot.png");
 }
 #kpi
 {
@@ -151,7 +151,7 @@ section.details
 }
 .box h1, #registration h1
 {
-	background-image: url("/media/images/th.png");
+	background-image: url("/static/livestats/images/th.png");
 	margin: 0px;
 	font-size: 14px;
 	text-align: left;
@@ -172,7 +172,7 @@ section.details
 	margin-top: 20px;
 	background-color: #000;
 	background-position: top;
-	background-image: url("/media/images/box.png");
+	background-image: url("/static/livestats/images/box.png");
 	padding-bottom: 10px;
 	
 	-moz-border-radius: 5px;
@@ -236,7 +236,7 @@ section.details
 
 .login input#submit, .box li a, #registration input.multiplesubmit, #registration #close
 {
-	background: #222 url(/media/images/alert-overlay.png) repeat-x;
+	background: #222 url(/static/livestats/images/alert-overlay.png) repeat-x;
 	display: inline-block;
 	padding: 5px 10px 6px;
 	color: #fff;
