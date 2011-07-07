@@ -7,7 +7,7 @@ setup(
     author="Kristian Oellegaard",
     author_email="kristian@oellegaard.com",
     name='django-livestats',
-    version='0.0.2',
+    version='0.0.2.4',
     description='A django livestats framework',
     platforms=['OS Independent'],
     classifiers=CLASSIFIERS,

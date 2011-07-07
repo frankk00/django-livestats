@@ -94,7 +94,7 @@ class Stats(object):
             elif registrationtype.type =="LATEST":
                 try:
                     return queryset.order_by('-date')[0].value
-                except Reigstration.DoesNotExist:
+                except Registration.DoesNotExist:
                     return 0
 
             if v.has_key("value"):
