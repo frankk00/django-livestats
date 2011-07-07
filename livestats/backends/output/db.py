@@ -171,5 +171,3 @@ class DjangoOrmBackend(LivestatsBackend):
             return cache.get(cache_key)
         else:
             return cache.get(cache_key)
-
-    def
