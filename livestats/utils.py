@@ -14,7 +14,7 @@ import calendar
 from django.template import Template, Context
 import re
 from decimal import Decimal
-from models import MonitorBoxKPI, MonitorTableKPI
+from models import MonitorBoxKPI, MonitorTableKPI, Registration
 
 from django.template.defaultfilters import floatformat
 from django.db.models import Avg, Max, Min, Count, Sum
@@ -91,6 +91,12 @@ class Stats(object):
                 v = queryset.aggregate(value=Avg('value'))
             elif registrationtype.type == "COUNT":
                 v = queryset.aggregate(value=Count('value'))
+            elif registrationtype.type =="LATEST":
+                try:
+                    return queryset.order_by('-date')[0].value
+                except Reigstration.DoesNotExist:
+                    return 0
+
             if v.has_key("value"):
                 return v["value"]
             else:

@@ -21,6 +21,7 @@ KPI_TYPES = (
     ('SUM', _('Sum')),
     ('AVG', _('Average')),
     ('COUNT', _('Count')),
+    ('LATEST', _('Latest value'))
 )
 
 COLORS = (
