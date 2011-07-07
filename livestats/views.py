@@ -8,7 +8,6 @@
    License      Copyright 2011 prinkk
    Filename     views.py
 '''
-from django.core.cache import cache
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -21,10 +20,8 @@ from forms import RegistrationForm
 from django.views.decorators.cache import cache_page
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from backends.db import DjangoOrmBackend
 
-
-CACHE_EXPIRATION_LIVEUPDATE = 60 * 5
-CACHE_EXPIRATION_HISTORYUPDATE = 60 * 60
 
 @login_required
 def registration_form(request):
@@ -44,129 +41,35 @@ def registration_form(request):
         context_instance=RequestContext(request))
 
 def monitor_detail(request, monitor_id=1, ajax=False, day=None, month=None, year=None):
-    # Get current monitor from url
-    monitor = Monitor.objects.get(pk=monitor_id)
-    # Get all entities for current monitor
-    reg_entities = monitor.entities.all()
-    # Get RegistrationType objects from monitor
-    regtypes = RegistrationType.objects.filter(kpi__monitorkpi__monitor=monitor)
-    # Get tablecolumns for monitor
-    tablecolumns = MonitorTableKPI.objects.filter(monitor=monitor)
-    # Get KPI Boxes for monitor
-    boxes = MonitorBoxKPI.objects.filter(monitor=monitor).order_by('order')
-    # Assume the date is given manually, if set to false later, it will make
-    # the KPI boxes make their own date interval, based in the current date
-    manual_date= True
-    
-    # Check if the page should live update and generate a Registraion queryset,
-    # based on the date from the url and use it as a manual date
-    
-    if day and month and year:
-        live_update = False
-        reg = Registration.objects.filter(date__day=day, date__month=month, date__year=year)
-        serial = "%s%s%s" % (day, month, year)
-    elif month and year:
-        if int(month) == datetime.date.today().month and int(year) == datetime.date.today().year:
-            live_update = True
-        else:
-            live_update = False
-        reg = Registration.objects.filter(date__month=month, date__year=year)
-        serial = "%s%s%s" % (0, month, year)
-    else:
-        date = datetime.date.today()
-        serial = "%s%s%s" % (date.day, date.month, date.year)
-        reg = Registration.objects.filter(date__day=date.day, date__month=date.month, date__year=date.year)
-        live_update = True
-        manual_date = False
-
-    cache_key = "monitor-%s-%s" % (monitor.id, serial)
-    cache_key_number = "monitor-%s-%s-id" % (monitor.id, serial)
-
-    # Return hostpage
     if not ajax:
-        last_week_range = DateInterval(date=datetime.date.today()).lastweek()
-        kpi_history = KPIHistory.objects.filter(monitor=monitor, kpi=monitor.order_by, date_from__range=last_week_range, date_to__range=last_week_range)
+        if day and month and year:
+            live_update = False
+        elif month and year:
+            if int(month) == datetime.date.today().month and int(year) == datetime.date.today().year:
+                live_update = True
+            else:
+                live_update = False
+        else:
+            live_update = True
+        monitor = Monitor.objects.get(pk=monitor_id)
         return render_to_response("livestats/monitor_detail.html", {'live_update': live_update,
-        'monitor': monitor, 'kpi_history': kpi_history, 'boxes': boxes, 'tablecolumns': tablecolumns},
+                                                                    'monitor': monitor,
+                                                                    'boxes': MonitorBoxKPI.objects.filter(monitor=monitor).order_by('order'),
+                                                                    'tablecolumns': MonitorTableKPI.objects.filter(monitor=monitor)},
             context_instance=RequestContext(request))
 
-    if reg.count() == 0:
+    if not request.GET.has_key('refresh'):
+        d = DjangoOrmBackend(monitor_id, day, month, year).return_dict()
+        return render_to_response("livestats/monitor_detail.json",
+                d,
+                context_instance=RequestContext(request))
+    else:
         return HttpResponse("""
         {
-        	"projects" : []
+            "projects" : []
         }
-        	""")
+            """)
 
-
-    if not cache.get(cache_key) or reg.order_by('-id')[0].id != cache.get(cache_key_number):
-        # Create KPI boxes
-        if manual_date:
-            stats = Stats(MonitorBoxKPI.objects.filter(monitor=monitor).order_by('-order'), reg.filter(entity__in=reg_entities), manual_date=manual_date)
-        else:
-            stats = Stats(MonitorBoxKPI.objects.filter(monitor=monitor).order_by('-order'), Registration.objects.filter(entity__in=reg_entities))
-        stats.monitor = monitor
-
-
-
-
-        # Competition // # KPI Competition status
-
-        m = MonitorCompetition.objects.filter(monitors=monitor)
-        c = []
-        mcdict = {}
-        if m.count() > 0:
-            for mc in m:
-                for mon in mc.monitors.all():
-                    mstats = Stats([mc.kpi], reg.filter(entity__in=mon.entities.all()), mc.kpi)
-                    mstats.monitor = mon
-                    mstats.competition = mc
-                    c.append(mstats)
-            c = sorted(c, key=attrgetter('order_by'), reverse=True)
-            i = 0
-            for mc in c:
-                i = i +1
-                if mc.monitor == monitor:
-                    try:
-                        stats.competition = i
-                        stats.competition_css_class = MonitorCompetitionGoal.objects.filter(monitorcompetition=mc.competition, nr=i).get().color
-                    except:
-                        stats.competition = i
-                        stats.competition_css_class = "grey"
-
-        # Create data for table
-        entities = []
-        if monitor.show_table:
-            for entity in reg_entities:
-                entity_reg = reg.filter(entity=entity, type__in=regtypes)
-                if entity_reg:
-                    agstats = Stats(tablecolumns, entity_reg, monitor.order_by, manual_date=manual_date)
-                    agstats.entity = entity
-                    entities.append(agstats)
-            entities = sorted(entities, key=attrgetter('order_by'), reverse=True)
-
-        # Provide an <html> and <body> tag if not ajax, to make compatible with django debug toolbar
-
-        if live_update:
-            cachetime = CACHE_EXPIRATION_LIVEUPDATE
-        else:
-            cachetime = CACHE_EXPIRATION_HISTORYUPDATE
-
-        cache.set(cache_key, render_to_string("livestats/monitor_detail.json",
-            {'summary': stats, 'entities': entities, 'html': False},
-            context_instance=RequestContext(request)), cachetime)
-        cache.set(cache_key_number, reg.order_by('-id')[0].id, cachetime)
-        return HttpResponse(cache.get(cache_key))
-    
-    else:
-        if not request.GET.has_key('refresh'):
-            return HttpResponse(cache.get(cache_key))
-        else:
-            return HttpResponse("""
-            {
-            	"projects" : []
-            }
-            	""")
-        
 
 @cache_page(10)    
 def overview_detail(request, overview_id, ajax=False, day=None, month=None, year=None):
